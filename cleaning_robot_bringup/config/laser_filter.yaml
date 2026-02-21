@@ -1,8 +1,14 @@
 scan_filter:
   ros__parameters:
     filter1:
-      name: remove_rear_blind_zone
-      type: laser_filters/LaserScanAngularBoundsFilterInPlace
+      name: remove_robot_body
+      type: laser_filters/LaserScanBoxFilter
       params:
-        lower_angle: -1.484  # -85 degrees
-        upper_angle: 1.484   # +85 degrees
+        box_frame: base_link
+        min_x: -0.40   # Back of robot (body extends ~-0.365m from base_link)
+        max_x:  0.32   # Just before lidar sensor head (at +0.365m)
+        min_y: -0.30   # Robot half-width (0.25m) + 5cm margin
+        max_y:  0.30
+        min_z: -0.5
+        max_z:  1.0
+        invert: false  # Remove points INSIDE the box (robot body)
