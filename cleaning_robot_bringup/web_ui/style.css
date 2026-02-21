@@ -1,0 +1,144 @@
+:root {
+    --bg-color: #1a1a1a;
+    --sidebar-bg: #2d2d2d;
+    --accent-color: #ff9800;
+    --text-color: #ffffff;
+    --danger-color: #f44336;
+    --success-color: #4caf50;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+header {
+    background-color: #000;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+#status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.connected { background-color: var(--success-color); }
+.disconnected { background-color: var(--danger-color); }
+
+main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+#map-container {
+    flex: 3;
+    position: relative;
+    background-color: #333;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+#map-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.6);
+    padding: 0.5rem;
+    pointer-events: none;
+}
+
+#sidebar {
+    flex: 1;
+    background-color: var(--sidebar-bg);
+    padding: 1.5rem;
+    border-left: 1px solid #444;
+    overflow-y: auto;
+}
+
+h3 {
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+section {
+    margin-bottom: 2rem;
+}
+
+.hidden { display: none; }
+
+input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    background: #1a1a1a;
+    border: 1px solid #555;
+    color: white;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    flex: 1;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+
+button:hover { opacity: 0.8; }
+
+#save-waypoint { background-color: var(--accent-color); color: black; }
+#cancel-waypoint { background-color: #555; color: white; }
+
+#waypoints-list {
+    list-style: none;
+}
+
+.waypoint-item {
+    background-color: #3d3d3d;
+    margin-bottom: 10px;
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.waypoint-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-go { background-color: var(--success-color); color: white; padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+.btn-del { background-color: var(--danger-color); color: white; padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+
+@media (max-width: 768px) {
+    main { flex-direction: column; }
+    #sidebar { flex: none; height: 40%; }
+}

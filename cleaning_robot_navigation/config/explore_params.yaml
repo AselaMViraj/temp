@@ -1,0 +1,16 @@
+explore_node:
+  ros__parameters:
+    planner_frequency: 0.1    # Slow enough to avoid rapid same-goal spam (crash fix)
+    progress_timeout: 60.0
+    min_frontier_size: 1.0    # Ignore small corner fragments (<1m), these cause the crash
+    visualize: true
+    costmap_topic: /global_costmap/costmap
+    costmap_updates_topic: /global_costmap/costmap_updates
+    return_to_init: true
+    robot_base_frame: base_link
+    map_frame: map
+    
+    # Cost Function Weights
+    potential_scale: 3.0      # Prefer closer frontiers
+    orientation_scale: 0.0    # Ignore orientation cost
+    gain_scale: 2.0           # Prefer larger frontiers (avoids tiny dead-end fragments)

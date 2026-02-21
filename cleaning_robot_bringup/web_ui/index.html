@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rover Web Commander</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- ROS Library Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/eventemitter2@6.4.9/lib/eventemitter2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/roslib@1/build/roslib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easeljs@1/lib/easeljs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ros2d@0/build/ros2d.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Rover Commander</h1>
+        <div id="status" class="disconnected">Disconnected</div>
+    </header>
+
+    <main>
+        <div id="map-container">
+            <div id="map"></div>
+            <div id="map-overlay">
+                <p>Tap map to add waypoint</p>
+            </div>
+        </div>
+
+        <aside id="sidebar">
+            <section id="waypoint-form" class="hidden">
+                <h3>New Waypoint</h3>
+                <input type="text" id="waypoint-name" placeholder="Name (e.g. Kitchen)">
+                <div class="button-group">
+                    <button id="save-waypoint">Save</button>
+                    <button id="cancel-waypoint">Cancel</button>
+                </div>
+            </section>
+
+            <section id="waypoints-list-container">
+                <h3>Saved Places</h3>
+                <ul id="waypoints-list">
+                    <!-- Waypoints will be added here -->
+                </ul>
+                <button id="reset-waypoints" class="btn-danger" style="margin-top: 10px; width: 100%;">Reset All
+                    Waypoints</button>
+            </section>
+        </aside>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

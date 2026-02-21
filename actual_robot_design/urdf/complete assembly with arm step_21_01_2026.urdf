@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="complete assembly with arm step_21_01_2026">
+  <link
+    name="Chassis Link">
+    <inertial>
+      <origin
+        xyz="-0.0072712 4.7837E-06 0.28381"
+        rpy="0 0 0" />
+      <mass
+        value="7.7971" />
+      <inertia
+        ixx="0.1738"
+        ixy="-2.9614E-07"
+        ixz="4.5541E-05"
+        iyy="0.17816"
+        iyz="4.3358E-08"
+        izz="0.14848" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/Chassis Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.29804 0.29804 0.29804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/Chassis Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="LDR Link">
+    <inertial>
+      <origin
+        xyz="-1.10344509423044E-05 -0.000653256641054941 0.0103624527454163"
+        rpy="0 0 0" />
+      <mass
+        value="0.0111783243193461" />
+      <inertia
+        ixx="4.8178444082492E-06"
+        ixy="-5.19328127207668E-08"
+        ixz="5.92550360819781E-09"
+        iyy="4.69077051500147E-06"
+        iyz="-3.26692938637196E-08"
+        izz="8.89096736755159E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/LDR Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/LDR Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LDR Joint"
+    type="continuous">
+    <origin
+      xyz="0.36475 0 0.0795"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis Link" />
+    <child
+      link="LDR Link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="FR cst Link">
+    <inertial>
+      <origin
+        xyz="0.0107338152205285 3.41167113570018E-05 -0.0390635862855475"
+        rpy="0 0 0" />
+      <mass
+        value="0.0151226859779369" />
+      <inertia
+        ixx="3.2221245199144E-06"
+        ixy="-1.69926069447565E-09"
+        ixz="9.57458357688273E-07"
+        iyy="4.07816954635328E-06"
+        iyz="3.60959235108519E-09"
+        izz="1.68954266194224E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/FR cst Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/FR cst Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="FR cst Joint"
+    type="continuous">
+    <origin
+      xyz="0.23103 -0.254 -0.0189"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis Link" />
+    <child
+      link="FR cst Link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="BR cst Link">
+    <inertial>
+      <origin
+        xyz="-0.0107338152205284 -3.41167113571683E-05 -0.0390635862855475"
+        rpy="0 0 0" />
+      <mass
+        value="0.0151226859779368" />
+      <inertia
+        ixx="3.22212451991439E-06"
+        ixy="-1.69926069447692E-09"
+        ixz="-9.57458357688271E-07"
+        iyy="4.07816954635327E-06"
+        iyz="-3.60959235108343E-09"
+        izz="1.68954266194224E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/BR cst Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/BR cst Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="BR cst Joint"
+    type="continuous">
+    <origin
+      xyz="-0.230971685745046 -0.253999999980535 -0.018899999882565"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis Link" />
+    <child
+      link="BR cst Link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="R motor Link">
+    <inertial>
+      <origin
+        xyz="1.50423532222455E-17 0.0325833084498167 9.71445146547012E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.607752808920021" />
+      <inertia
+        ixx="0.000684610807298508"
+        ixy="3.65215163747864E-20"
+        ixz="-2.44736717966158E-24"
+        iyy="0.00107449147292608"
+        iyz="1.17453513972642E-18"
+        izz="0.000684584940686824" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/R motor Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/R motor Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="R motor Joint"
+    type="continuous">
+    <origin
+      xyz="2.83142549543058E-05 -0.346999999980536 -0.0170000000000006"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis Link" />
+    <child
+      link="R motor Link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="FL cst Link">
+    <inertial>
+      <origin
+        xyz="0.00878959760274853 -0.00616108113875458 -0.0390635858390881"
+        rpy="0 0 0" />
+      <mass
+        value="0.0151226869660086" />
+      <inertia
+        ixx="3.50511565388487E-06"
+        ixy="4.0270570521447E-07"
+        ixz="7.84360432779669E-07"
+        iyy="3.7951784957963E-06"
+        iyz="-5.49106730678507E-07"
+        izz="1.68954271040931E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/FL cst Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/FL cst Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="FL cst Joint"
+    type="continuous">
+    <origin
+      xyz="0.231028314254954 0.253999999980535 -0.018899999882565"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis Link" />
+    <child
+      link="FL cst Link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="BL cst Link">
+    <inertial>
+      <origin
+        xyz="-0.0107338152205283 -3.41167113571128E-05 -0.0390635862855475"
+        rpy="0 0 0" />
+      <mass
+        value="0.0151226859779369" />
+      <inertia
+        ixx="3.22212451991439E-06"
+        ixy="-1.69926069447672E-09"
+        ixz="-9.57458357688271E-07"
+        iyy="4.07816954635327E-06"
+        iyz="-3.60959235108577E-09"
+        izz="1.68954266194224E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/BL cst Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/BL cst Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="BL cst Joint"
+    type="continuous">
+    <origin
+      xyz="-0.230971685745046 0.253999999980535 -0.018899999882565"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis Link" />
+    <child
+      link="BL cst Link" />
+    <axis
+      xyz="0 0 -1" />
+  </joint>
+  <link
+    name="L motor Link">
+    <inertial>
+      <origin
+        xyz="1.93664134686098E-18 -0.0325833084498167 3.46944695195361E-18"
+        rpy="0 0 0" />
+      <mass
+        value="0.607752808920022" />
+      <inertia
+        ixx="0.000684588641410266"
+        ixy="1.3570590937322E-20"
+        ixz="9.05703164512365E-09"
+        iyy="0.00107449147292608"
+        iyz="1.5414186551051E-20"
+        izz="0.000684607106575067" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/L motor Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/L motor Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="L motor Joint"
+    type="continuous">
+    <origin
+      xyz="2.83142549548835E-05 0.346999999980535 -0.0169999999999998"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis Link" />
+    <child
+      link="L motor Link" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="Arm mount Link">
+    <inertial>
+      <origin
+        xyz="0.00457366815743376 -0.00205075422992168 0.0970030383963709"
+        rpy="0 0 0" />
+      <mass
+        value="1.49113440101458" />
+      <inertia
+        ixx="0.0034149562029926"
+        ixy="-1.47196165218826E-06"
+        ixz="-0.000133311356457693"
+        iyy="0.00264283744945075"
+        iyz="1.9516442806221E-07"
+        izz="0.00224641613111822" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/Arm mount Link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://complete assembly with arm step_21_01_2026/meshes/Arm mount Link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Arm mount Joint"
+    type="prismatic">
+    <origin
+      xyz="0.23655 0 0.3785"
+      rpy="0 0 0" />
+    <parent
+      link="Chassis Link" />
+    <child
+      link="Arm mount Link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="0"
+      upper="0.585"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>

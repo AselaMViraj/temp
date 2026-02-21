@@ -1,0 +1,9 @@
+<library path="diffdrive_zlac8015d">
+  <class name="diffdrive_zlac8015d/DiffDriveZlac8015d"
+         type="DiffDriveZlac8015d"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware Interface for ZLAC8015D Dual Servo Driver via Modbus-RTU.
+    </description>
+  </class>
+</library>
