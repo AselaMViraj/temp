@@ -18,6 +18,7 @@ install(PROGRAMS
   scripts/waypoint_manager.py
   scripts/web_server.py
   scripts/auto_kickstart.py
+  scripts/auto_localize.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

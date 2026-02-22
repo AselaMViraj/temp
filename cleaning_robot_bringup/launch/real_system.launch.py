@@ -132,7 +132,7 @@ def generate_launch_description():
     ]
 
     # Auto Kickstart for Exploration (Clears blind spot)
-    auto_kickstart =  TimerAction(
+    auto_kickstart = TimerAction(
         period=15.0,
         actions=[
             Node(
@@ -141,6 +141,23 @@ def generate_launch_description():
                 name='auto_kickstart',
                 output='screen',
                 condition=IfCondition(explore)
+            )
+        ]
+    )
+
+    # Auto Localization: calls global localization + spins robot to converge AMCL
+    # Runs 20s after launch (after Nav2/AMCL is fully active)
+    auto_localize = TimerAction(
+        period=20.0,
+        actions=[
+            Node(
+                package='cleaning_robot_bringup',
+                executable='auto_localize.py',
+                name='auto_localize',
+                output='screen',
+                condition=IfCondition(
+                    PythonExpression(["'", localization, "' == 'true' and '", explore, "' == 'false'"])
+                )
             )
         ]
     )
@@ -164,6 +181,7 @@ def generate_launch_description():
         # Tools
         *web_server_nodes,
         auto_kickstart,
+        auto_localize,
         
         # Navigation Stack (Delayed slightly to allow hardware to settle)
         TimerAction(period=5.0, actions=[
