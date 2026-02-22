@@ -32,15 +32,14 @@ class AutoLocalizeNode(Node):
         rclpy.spin_until_future_complete(self, future, timeout_sec=5.0)
         self.get_logger().info('Global localization initialized! Spinning to help AMCL converge...')
 
-        # Rotate slowly for 10 seconds so AMCL can match scan to map
+        # Rotate slowly for 15 seconds so AMCL can match scan to map
         twist = Twist()
         twist.angular.z = 0.15  # slow spin
         spin_duration = 15.0
         start = time.time()
-        rate = self.create_rate(10)
         while time.time() - start < spin_duration:
             self.cmd_pub.publish(twist)
-            rate.sleep()
+            time.sleep(0.1)  # publish at 10Hz — no executor needed
 
         # Stop
         self.cmd_pub.publish(Twist())
