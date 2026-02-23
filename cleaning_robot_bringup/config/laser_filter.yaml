@@ -1,11 +1,16 @@
 scan_filter:
   ros__parameters:
     filter1:
-      name: front_180_only
-      type: laser_filters/LaserScanAngularBoundsFilter
+      name: front_half_only
+      type: laser_filters/LaserScanBoxFilter
       params:
-        # Keep only the front 180° (right: -90° to left: +90°)
-        # Enclosure physically blocks rear hemisphere — angular filter matches reality
-        # This eliminates ALL enclosure internal reflections cleanly (unlike box filter)
-        lower_angle: -1.5708   # -90° (right side)
-        upper_angle:  1.5708   # +90° (left side)
+        box_frame: base_link
+        # Large box covering the entire rear half-plane (x < 0 = behind robot)
+        # Removes all lidar points behind the robot center line
+        min_x: -10.0   # Far behind robot
+        max_x:  0.0    # Up to the robot center (front half starts here)
+        min_y: -10.0
+        max_y:  10.0
+        min_z: -1.0
+        max_z:  2.0
+        invert: false  # Remove points INSIDE this box (= remove rear half)
