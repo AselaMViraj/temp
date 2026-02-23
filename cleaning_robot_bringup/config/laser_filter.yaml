@@ -1,16 +1,29 @@
 scan_filter:
   ros__parameters:
     filter1:
-      name: front_half_only
+      name: remove_rear_half
       type: laser_filters/LaserScanBoxFilter
       params:
         box_frame: base_link
-        # Large box covering the entire rear half-plane (x < 0 = behind robot)
-        # Removes all lidar points behind the robot center line
-        min_x: -10.0   # Far behind robot
-        max_x:  0.0    # Up to the robot center (front half starts here)
+        # Remove entire rear half-plane
+        min_x: -10.0
+        max_x:  0.0
         min_y: -10.0
         max_y:  10.0
         min_z: -1.0
         max_z:  2.0
-        invert: false  # Remove points INSIDE this box (= remove rear half)
+        invert: false  # Remove points inside (rear half)
+    filter2:
+      name: remove_front_chassis_arm
+      type: laser_filters/LaserScanBoxFilter
+      params:
+        box_frame: base_link
+        # Remove the arm/chassis structure in front of the laser
+        # Arm base is at ~0 to 0.50m forward, full robot width
+        min_x:  0.0
+        max_x:  0.55  # Cover arm base mounting area (arm is at front of chassis)
+        min_y: -0.42  # Full robot half-width + margin
+        max_y:  0.42
+        min_z: -0.5
+        max_z:  1.5
+        invert: false  # Remove points inside (arm/chassis region)
