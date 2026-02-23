@@ -135,10 +135,10 @@ controller_server:
       decel_lim_x: -0.1
       decel_lim_y: 0.0
       decel_lim_theta: -0.2
-      vx_samples: 20
+      vx_samples: 30
       vy_samples: 1
-      vtheta_samples: 20
-      sim_time: 3.5
+      vtheta_samples: 30
+      sim_time: 1.5          # Short lookahead (0.135m at 0.09m/s) — less affected by phantom blobs
       linear_granularity: 0.05
       angular_granularity: 0.025
       transform_tolerance: 2.0
