@@ -175,12 +175,12 @@ local_costmap:
       width: 3
       height: 3
       footprint: "[ [0.40, 0.37], [0.40, -0.37], [-0.37, -0.37], [-0.37, 0.37] ]"  # Robot base only (0.77m x 0.74m) — arm is above lidar height, not in 2D costmap
-      footprint_padding: 0.07  # 7cm safety margin prevents corner clipping
+      footprint_padding: 0.03  # 3cm padding — reduced to allow corridor navigation
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 5.0
-        inflation_radius: 0.35   # Compromise: fits 1.2m corridors straight, arm clears with footprint polygon check
+        cost_scaling_factor: 10.0  # Faster decay = narrower high-cost zone
+        inflation_radius: 0.20   # Smaller inflation to allow narrow corridor navigation
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -225,7 +225,7 @@ global_costmap:
       resolution: 0.05
       track_unknown_space: true
       footprint: "[ [0.40, 0.37], [0.40, -0.37], [-0.37, -0.37], [-0.37, 0.37] ]"  # Robot base only (0.77m x 0.74m) — arm is above lidar height, not in 2D costmap
-      footprint_padding: 0.07  # 7cm safety margin prevents corner clipping
+      footprint_padding: 0.03  # 3cm padding — reduced to allow corridor navigation
 
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
       static_layer:
@@ -247,7 +247,7 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.35   # Compromise: fits 1.2m corridors straight, arm clears with footprint polygon check
+        inflation_radius: 0.20   # Smaller inflation to allow narrow corridor navigation
       always_send_full_costmap: True
   global_costmap_client:
     ros__parameters:
