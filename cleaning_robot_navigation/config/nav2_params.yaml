@@ -174,13 +174,13 @@ local_costmap:
       rolling_window: true
       width: 3
       height: 3
-      footprint: "[ [0.40, 0.37], [0.40, -0.37], [-0.37, -0.37], [-0.37, 0.37] ]"  # Robot base only (0.77m x 0.74m) — arm is above lidar height, not in 2D costmap
-      footprint_padding: 0.03  # 3cm padding — reduced to allow corridor navigation
+      footprint: "[ [0.35, 0.25], [0.35, -0.25], [-0.35, -0.25], [-0.35, 0.25] ]"  # Conservative planning footprint 0.70m x 0.50m — lidar handles real obstacle avoidance
+      footprint_padding: 0.01
       plugins: ["voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 10.0  # Faster decay = narrower high-cost zone
-        inflation_radius: 0.20   # Smaller inflation to allow narrow corridor navigation
+        cost_scaling_factor: 5.0
+        inflation_radius: 0.28   # Must be >= inscribed radius (0.25m footprint + 0.01 padding = 0.26m)
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -224,8 +224,8 @@ global_costmap:
       origin_y: -25.0
       resolution: 0.05
       track_unknown_space: true
-      footprint: "[ [0.40, 0.37], [0.40, -0.37], [-0.37, -0.37], [-0.37, 0.37] ]"  # Robot base only (0.77m x 0.74m) — arm is above lidar height, not in 2D costmap
-      footprint_padding: 0.03  # 3cm padding — reduced to allow corridor navigation
+      footprint: "[ [0.35, 0.25], [0.35, -0.25], [-0.35, -0.25], [-0.35, 0.25] ]"  # Conservative planning footprint 0.70m x 0.50m — lidar handles real obstacle avoidance
+      footprint_padding: 0.01
 
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
       static_layer:
@@ -247,7 +247,7 @@ global_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.20   # Smaller inflation to allow narrow corridor navigation
+        inflation_radius: 0.28   # Must be >= inscribed radius (0.25m footprint + 0.01 padding = 0.26m)
       always_send_full_costmap: True
   global_costmap_client:
     ros__parameters:
