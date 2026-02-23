@@ -1,165 +1,184 @@
-# Cleaning Robot Workspace
+# 🧹 Cleaning Robot – Real Hardware SLAM & Navigation Guide
 
-## Overview
-This project simulates and controls a cleaning robot in a **ROS2 Humble** environment. It is designed to demonstrate autonomous mapping, navigation, and exploration using industry-standard tools.
+This guide explains how to:
 
-### Key Features
-- **Autonomous Navigation**: Uses **Nav2 (Navigation 2)** for reliable path planning and obstacle avoidance.
-- **SLAM**: Generates 2D occupancy maps using **SLAM Toolbox**.
-- **Auto-Exploration**: Uses `m-explore-ros2` to autonomously detect frontiers and explore unknown environments.
-- **Web Interface**: A responsive web-based commander to mark custom waypoints (e.g., "Kitchen", "Table") and send the robot to them.
-- **Ignition Gazebo Simulation**: Realistic physics simulation with a custom robot model requiring `ros_gz`.
+* Build the ROS2 workspace
+* Perform SLAM (manual exploration)
+* Perform SLAM (auto exploration)
+* Save the generated map
+* Navigate using a saved map
 
----
-
-## 1. Prerequisites & Dependencies
-
-### System Requirements
-- **OS**: Ubuntu 22.04 LTS (Jammy Jellyfish)
-- **ROS Distribution**: ROS2 Humble Hawksbill
-
-### Required Dependencies
-Install the primary ROS2 packages:
-```bash
-sudo apt update
-sudo apt install -y \
-    ros-humble-desktop-full \
-    ros-humble-navigation2 \
-    ros-humble-nav2-bringup \
-    ros-humble-slam-toolbox \
-    ros-humble-rosbridge-server \
-    ros-humble-xacro \
-    ros-humble-joint-state-publisher-gui \
-    ros-humble-teleop-twist-keyboard \
-    ros-humble-ros-gz \
-    ros-humble-ros-gz-bridge
-```
-
-### Optional Dependencies
-If you plan to use a joystick or priority multiplexing:
-```bash
-sudo apt install -y ros-humble-twist-mux ros-humble-joy ros-humble-teleop-twist-joy
-```
+It is written for users who may be new to ROS2.
 
 ---
 
-## 2. Installation and Build
+# 📦 System Requirements
 
-1.  **Create a Workspace**:
-    ```bash
-    mkdir -p ~/rover_ws/src
-    cd ~/rover_ws/src
-    ```
-
-2.  **Clone the Repository**:
-    Paste the contents of this folder into `src` (or git clone if applicable).
-
-3.  **Install Dependencies (rosdep)**:
-    Navigate to the workspace root and install any missing dependencies:
-    ```bash
-    cd ~/rover_ws
-    rosdep install --from-paths src --ignore-src -r -y
-    ```
-
-4.  **Build the Workspace**:
-    ```bash
-    colcon build --symlink-install
-    ```
-    *Note: `--symlink-install` allows you to edit Python scripts and launch files without rebuilding.*
-
-5.  **Source the Workspace**:
-    ```bash
-    source install/setup.bash
-    ```
-    *(Recommended: Add this line to your `~/.bashrc`)*
+* Ubuntu 22.04
+* ROS2 (Humble or compatible version)
+* Real robot hardware connected and powered
+* Workspace: `~/Desktop/rover_ws`
 
 ---
 
-## 3. Running the Simulation
+# 🚀 1. Build the Workspace
 
-All commands assume you have sourced the workspace: `source ~/rover_ws/install/setup.bash`
+This must be done **before running the system**.
 
-### A. View Robot Model (URDF Check)
-To visualize just the robot description in RViz without physics:
-```bash
-ros2 launch cleaning_robot_description view_bot.launch.py
-```
-
-### B. Autonomous Exploration (SLAM + Auto-Explore)
-This is the main demo. It launches Gazebo, Nav2, SLAM Toolbox, and the Exploration nodes. The robot will start mapping the "Cafe" world automatically.
+## Step 1 — Open Terminal
 
 ```bash
-ros2 launch cleaning_robot_bringup full_system.launch.py slam:=true explore:=true world_file:=cafe.world
+cd ~/Desktop/rover_ws
 ```
 
-### C. Manual Mapping (SLAM Only)
-Use this if you want to drive the robot yourself to build the map.
+## Step 2 — Build the Workspace
 
-1.  **Launch System**:
-    ```bash
-    ros2 launch cleaning_robot_bringup full_system.launch.py slam:=true explore:=false world_file:=cafe.world
-    ```
+```bash
+colcon build
+```
 
-2.  **Drive Robot** (in a new terminal):
-    ```bash
-    ros2 run teleop_twist_keyboard teleop_twist_keyboard
-    ```
-    *Controls: `i` (forward), `,` (back), `j` (left), `l` (right), `k` (stop)*
+Wait until the build completes successfully.
 
----
+## Step 3 — Source the Workspace
 
-## 4. Saving the Map
-Once you are satisfied with the generated map:
+⚠️ This must be done in **every new terminal**.
 
-1.  **Save the Map**:
-    ```bash
-    ros2 run nav2_map_server map_saver_cli -f ~/rover_ws/src/cleaning_robot_navigation/maps/my_map
-    ```
-    *This creates `my_map.yaml` and `my_map.pgm`.*
+```bash
+source install/setup.bash
+```
 
 ---
 
-## 5. Navigation Mode
-Use this mode to navigate a pre-saved map.
+# 🗺 2. SLAM – Manual Exploration Mode
 
-1.  **Stop Previous Runs** (Ctrl+C).
-2.  **Launch Navigation**:
-    ```bash
-    ros2 launch cleaning_robot_bringup full_system.launch.py slam:=false localization:=true map:=~/rover_ws/src/cleaning_robot_navigation/maps/cafe_map.yaml
-    ```
-    *(Ensure the map path is correct)*
-
-3.  **Send Goals**:
-    - **RViz**: Use the "Nav2 Goal" button at the top.
-    - **Terminal**:
-      ```bash
-      ros2 action send_goal /navigate_to_pose nav2_msgs/action/NavigateToPose "{pose: {header: {frame_id: 'map'}, pose: {position: {x: 1.5, y: -0.5, z: 0.0}, orientation: {w: 1.0}}}}"
-      ```
+Use this mode to manually drive the robot and create a map.
 
 ---
 
-## 6. Web Commander Interface
-The project includes a custom Web UI to control the robot and manage waypoints.
+## Terminal 1 — Start the Real System
 
-1.  **Access the UI**:
-    Open your browser (on the same machine) and go to:
-    [http://localhost:5000](http://localhost:5000)
+```bash
+cd ~/Desktop/rover_ws
+source install/setup.bash
 
-2.  **Features**:
-    - **Live Map**: Shows the robot's position and the costmap.
-    - **Add Waypoints**: Click anywhere on the map to name and save a location (e.g., "Kitchen").
-    - **Smart Snapping**: If you click on an obstacle, the system automatically finds the nearest safe point.
-    - **Navigate**: Click "Go" next to any saved waypoint to send the robot there.
+ros2 launch cleaning_robot_bringup real_system.launch.py slam:=true explore:=false
+```
+
+Do NOT close this terminal while mapping.
 
 ---
 
-## 7. Troubleshooting
+## Terminal 2 — Control the Robot
 
-- **Robot model missing in Gazebo?**
-  Ensure you installed `ros-humble-ros-gz` and `ros-humble-ros-gz-bridge`.
-  
-- **"Command not found" error?**
-  Make sure you ran `source install/setup.bash` in *every* new terminal.
+Open a **new terminal**:
 
-- **Web UI not connecting?**
-  Ensure `rosbridge_server` is running (it starts automatically with `full_system.launch.py`). Check the browser console (F12) for errors.
+```bash
+cd ~/Desktop/rover_ws
+source install/setup.bash
+
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+```
+
+### Keyboard Controls
+
+| Key | Action        |
+| --- | ------------- |
+| i   | Move Forward  |
+| ,   | Move Backward |
+| j   | Turn Left     |
+| l   | Turn Right    |
+
+Drive the robot slowly and cover the entire environment.
+
+---
+
+## Stop Manual Exploration
+
+1. Stop keyboard control (Terminal 2):
+
+```
+Ctrl + C
+```
+
+2. Keep Terminal 1 running until the map is saved.
+
+---
+
+# 💾 3. Save the Map
+
+Open a **new terminal**:
+
+```bash
+cd ~/Desktop/rover_ws
+source install/setup.bash
+
+ros2 run nav2_map_server map_saver_cli -f ~/Desktop/rover_ws/src/cleaning_robot_navigation/maps/my_map
+```
+
+This will generate:
+
+```
+my_map.pgm
+my_map.yaml
+```
+
+After saving the map:
+
+* Go back to Terminal 1
+* Press `Ctrl + C` to stop SLAM
+
+---
+
+# 🤖 4. SLAM – Auto Exploration Mode
+
+If you want the robot to explore automatically:
+
+```bash
+cd ~/Desktop/rover_ws
+source install/setup.bash
+
+ros2 launch cleaning_robot_bringup real_system.launch.py slam:=true explore:=true
+```
+
+After exploration finishes:
+
+1. Open a new terminal
+2. Save the map using the same map saver command
+3. Stop the running SLAM system with:
+
+```
+Ctrl + C
+```
+
+---
+
+# 🧭 5. Static Navigation Mode (Using Saved Map)
+
+After saving your map:
+
+```bash
+cd ~/Desktop/rover_ws
+source install/setup.bash
+
+ros2 launch cleaning_robot_bringup real_system.launch.py slam:=false localization:=true map:=/home/idea8/Desktop/rover_ws/src/cleaning_robot_navigation/maps/my_map.yaml
+```
+
+This will:
+
+* Load the saved map
+* Start localization
+* Enable navigation
+
+You can now send navigation goals via RViz or your navigation interface.
+
+---
+
+# ⚠️ Important Notes
+
+* Always run `source install/setup.bash` in every new terminal
+* Never close the main launch terminal while the robot is running
+* Always save the map before stopping SLAM
+* Use `Ctrl + C` to safely stop ROS2 processes
+* Run `colcon build` after making code changes
+
+---
