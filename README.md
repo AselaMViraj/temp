@@ -1,184 +1,316 @@
-# 🧹 Cleaning Robot – Real Hardware SLAM & Navigation Guide
+# 🧹 Cleaning Robot
 
-This guide explains how to:
+# Real Hardware SLAM & Navigation Guide
 
-* Build the ROS2 workspace
-* Perform SLAM (manual exploration)
-* Perform SLAM (auto exploration)
-* Save the generated map
-* Navigate using a saved map
+### (Jetson Orin Nano via SSH + Remote Visualization)
 
-It is written for users who may be new to ROS2.
+This guide explains how to operate the real robot where:
 
----
+* 🧠 ROS2 runs on **Jetson Orin Nano**
+* 💻 You connect using **SSH from your laptop**
+* 🗺 SLAM + Navigation run on Jetson
+* 🖥 RViz can run on your laptop
+* 🌐 Web interface can mark navigation points
 
-# 📦 System Requirements
+Workspace location on Jetson:
 
-* Ubuntu 22.04
-* ROS2 (Humble or compatible version)
-* Real robot hardware connected and powered
-* Workspace: `~/Desktop/rover_ws`
-
----
-
-# 🚀 1. Build the Workspace
-
-This must be done **before running the system**.
-
-## Step 1 — Open Terminal
-
-```bash
-cd ~/Desktop/rover_ws
+```
+~/cleaning_bot/rover_ws_2/temp
 ```
 
-## Step 2 — Build the Workspace
+---
+
+# 🏗 System Architecture
+
+| Device           | Role                    |
+| ---------------- | ----------------------- |
+| Jetson Orin Nano | Runs ROS2 + Nav2 + SLAM |
+| Laptop           | SSH control + RViz      |
+| Robot            | Sensors, Motors, LiDAR  |
+
+---
+
+# 🔐 1. Connect to Jetson (From Laptop)
+
+## Find Jetson IP (On Jetson)
 
 ```bash
+ip a
+```
+
+Look for something like:
+
+```
+192.168.X.XXX
+```
+
+## Connect from Laptop
+
+```bash
+ssh idea8@<JETSON_IP>
+```
+
+Example:
+
+```bash
+ssh idea8@192.168.1.45
+```
+
+All ROS commands must be executed inside SSH session.
+
+---
+
+# 🏗 2. Build Workspace (On Jetson via SSH)
+
+```bash
+cd ~/cleaning_bot/rover_ws_2/temp
 colcon build
-```
-
-Wait until the build completes successfully.
-
-## Step 3 — Source the Workspace
-
-⚠️ This must be done in **every new terminal**.
-
-```bash
 source install/setup.bash
 ```
 
----
-
-# 🗺 2. SLAM – Manual Exploration Mode
-
-Use this mode to manually drive the robot and create a map.
+⚠ Always run `source install/setup.bash` in every new SSH terminal.
 
 ---
 
-## Terminal 1 — Start the Real System
+# 🗺 3. SLAM – Manual Exploration
+
+## SSH Terminal 1 – Start SLAM
 
 ```bash
-cd ~/Desktop/rover_ws
+ssh idea8@<JETSON_IP>
+
+cd ~/cleaning_bot/rover_ws_2/temp
 source install/setup.bash
 
 ros2 launch cleaning_robot_bringup real_system.launch.py slam:=true explore:=false
 ```
 
-Do NOT close this terminal while mapping.
+Do NOT close this terminal.
 
 ---
 
-## Terminal 2 — Control the Robot
-
-Open a **new terminal**:
+## SSH Terminal 2 – Teleop Control
 
 ```bash
-cd ~/Desktop/rover_ws
+ssh idea8@<JETSON_IP>
+
+cd ~/cleaning_bot/rover_ws_2/temp
 source install/setup.bash
 
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 
-### Keyboard Controls
+### Controls
 
-| Key | Action        |
-| --- | ------------- |
-| i   | Move Forward  |
-| ,   | Move Backward |
-| j   | Turn Left     |
-| l   | Turn Right    |
+| Key | Action   |
+| --- | -------- |
+| i   | Forward  |
+| ,   | Backward |
+| j   | Left     |
+| l   | Right    |
 
-Drive the robot slowly and cover the entire environment.
+Explore the full area slowly.
 
 ---
 
-## Stop Manual Exploration
-
-1. Stop keyboard control (Terminal 2):
+## Stop Teleop
 
 ```
 Ctrl + C
 ```
 
-2. Keep Terminal 1 running until the map is saved.
+Keep SLAM running.
 
 ---
 
-# 💾 3. Save the Map
+# 💾 4. Save the Map
 
-Open a **new terminal**:
+Open new SSH terminal:
 
 ```bash
-cd ~/Desktop/rover_ws
+ssh idea8@<JETSON_IP>
+
+cd ~/cleaning_bot/rover_ws_2/temp
 source install/setup.bash
 
-ros2 run nav2_map_server map_saver_cli -f ~/Desktop/rover_ws/src/cleaning_robot_navigation/maps/my_map
+ros2 run nav2_map_server map_saver_cli -f ~/cleaning_bot/rover_ws_2/temp/cleaning_robot_navigation/maps/my_map
 ```
 
-This will generate:
+After saving:
+
+Go to SLAM terminal → press:
 
 ```
-my_map.pgm
-my_map.yaml
+Ctrl + C
 ```
-
-After saving the map:
-
-* Go back to Terminal 1
-* Press `Ctrl + C` to stop SLAM
 
 ---
 
-# 🤖 4. SLAM – Auto Exploration Mode
-
-If you want the robot to explore automatically:
+# 🤖 5. SLAM – Auto Exploration
 
 ```bash
-cd ~/Desktop/rover_ws
+ssh idea8@<JETSON_IP>
+
+cd ~/cleaning_bot/rover_ws_2/temp
 source install/setup.bash
 
 ros2 launch cleaning_robot_bringup real_system.launch.py slam:=true explore:=true
 ```
 
-After exploration finishes:
+After exploration:
 
-1. Open a new terminal
-2. Save the map using the same map saver command
-3. Stop the running SLAM system with:
-
-```
-Ctrl + C
-```
+1. Save map
+2. Stop SLAM with `Ctrl + C`
 
 ---
 
-# 🧭 5. Static Navigation Mode (Using Saved Map)
-
-After saving your map:
+# 🧭 6. Static Navigation Mode (Using Saved Map)
 
 ```bash
-cd ~/Desktop/rover_ws
+ssh idea8@<JETSON_IP>
+
+cd ~/cleaning_bot/rover_ws_2/temp
 source install/setup.bash
 
-ros2 launch cleaning_robot_bringup real_system.launch.py slam:=false localization:=true map:=/home/idea8/Desktop/rover_ws/src/cleaning_robot_navigation/maps/my_map.yaml
+ros2 launch cleaning_robot_bringup real_system.launch.py \
+slam:=false localization:=true \
+map:=/home/idea8/cleaning_bot/rover_ws_2/temp/cleaning_robot_navigation/maps/my_map.yaml
 ```
 
-This will:
-
-* Load the saved map
-* Start localization
-* Enable navigation
-
-You can now send navigation goals via RViz or your navigation interface.
+Now navigation stack is active.
 
 ---
 
-# ⚠️ Important Notes
+# 🎯 7. Command the Robot
 
-* Always run `source install/setup.bash` in every new terminal
-* Never close the main launch terminal while the robot is running
-* Always save the map before stopping SLAM
-* Use `Ctrl + C` to safely stop ROS2 processes
-* Run `colcon build` after making code changes
+You have two ways:
 
 ---
+
+## Option 1 – Using RViz (Recommended)
+
+1. Open RViz
+2. Click **"Nav2 Goal"**
+3. Click a location on the map
+
+Robot will move to that location.
+
+---
+
+## Option 2 – Send Goal from Terminal
+
+```bash
+ros2 action send_goal /navigate_to_pose nav2_msgs/action/NavigateToPose \
+"{pose: {header: {frame_id: 'map'}, pose: {position: {x: 1.5, y: -0.5, z: 0.0}, orientation: {w: 1.0}}}}"
+```
+
+You can change:
+
+* `x`
+* `y`
+
+To move robot to any coordinate.
+
+---
+
+# 🌐 8. Mark Places Using Web Interface
+
+The system includes a browser-based place marking interface.
+
+## Open in Browser
+
+Same device:
+
+```
+http://localhost:5000
+```
+
+From another device:
+
+```
+http://<JETSON_IP>:5000
+```
+
+---
+
+## Features
+
+### 🗺 Tap on Map
+
+* Adds a new place (e.g., "Kitchen", "Table")
+
+### 📌 Saved Places
+
+* Shows all saved locations
+* Click **Go** → Robot navigates automatically
+
+---
+
+# 🖥 9. Visualize on Laptop (Remote RViz)
+
+The workspace already includes:
+
+```
+cleaning_bot_description/view_remote.launch.py
+```
+
+---
+
+## Run on Laptop
+
+Make sure:
+
+* Laptop and Jetson are on same network
+* Same ROS2 version
+* Same `ROS_DOMAIN_ID`
+
+On laptop:
+
+```bash
+cd ~/cleaning_bot/rover_ws_2/temp
+source install/setup.bash
+
+ros2 launch cleaning_bot_description view_remote.launch.py
+```
+(change the path according to your directory)
+---
+
+## Add Topics in RViz
+
+Click **Add** → Add necessary topics:
+
+Recommended:
+
+* Map
+* LaserScan
+* TF
+* RobotModel
+* Path
+* Costmap
+* Pose
+
+---
+
+# ⚠️ Important Rules
+
+* Always SSH before running ROS commands
+* Always source workspace in every terminal
+* Save map BEFORE stopping SLAM
+* Never close main launch terminal while robot is running
+* Use `Ctrl + C` for safe shutdown
+
+---
+
+# 🧠 Complete Workflow Summary
+
+1. SSH into Jetson
+2. Build workspace
+3. Launch SLAM
+4. Explore area
+5. Save map
+6. Stop SLAM
+7. Launch static navigation
+8. Send goals (RViz / terminal / web UI)
+
+---
+
