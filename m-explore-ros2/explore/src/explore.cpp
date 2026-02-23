@@ -89,6 +89,30 @@ Explore::Explore()
   // Create cmd_vel publisher for initial 360° spin
   cmd_vel_publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
 
+  // Dedicated 10Hz timer for initial spin — independent of slow planner_frequency
+  spin_start_time_ = this->now();
+  RCLCPP_INFO(logger_, "Starting initial 360° rotation to build map...");
+  spin_timer_ = this->create_wall_timer(
+    std::chrono::milliseconds(100),  // 10Hz
+    [this]() {
+      double elapsed = (this->now() - spin_start_time_).seconds();
+      double spin_duration = 33.0;  // 0.19 rad/s x 33s ≈ 360°
+      if (elapsed < spin_duration) {
+        geometry_msgs::msg::Twist cmd;
+        cmd.angular.z = 0.19;  // Match hardware max angular velocity
+        cmd_vel_publisher_->publish(cmd);
+        if (std::fmod(elapsed, 10.0) < 0.15) {  // log every ~10s
+          RCLCPP_INFO(logger_, "Spinning... %.0f/%.0f seconds", elapsed, spin_duration);
+        }
+      } else {
+        // Done — stop robot and cancel this timer
+        cmd_vel_publisher_->publish(geometry_msgs::msg::Twist{});
+        initial_spin_complete_ = true;
+        spin_timer_->cancel();
+        RCLCPP_INFO(logger_, "Initial 360° rotation complete! Starting exploration...");
+      }
+    });
+
   search_ = frontier_exploration::FrontierSearch(costmap_client_.getCostmap(),
                                                  potential_scale_, gain_scale_,
                                                  min_frontier_size, logger_);
@@ -252,49 +276,11 @@ void Explore::makePlan()
 {
   RCLCPP_INFO(logger_, "makePlan() called");
   
-  // Perform initial 360° spin to build map before exploration
+  // Wait for initial spin to complete before planning
   if (!initial_spin_complete_) {
-    auto current_time = this->now();
-    
-    // First call - start spinning
-    if (spin_start_time_.nanoseconds() == 0) {
-      RCLCPP_INFO(logger_, "Starting initial 360° rotation to build map...");
-      spin_start_time_ = current_time;
-    }
-    
-    // Spin for 20 seconds at 0.5 rad/s (approximately 360°)
-    double spin_duration = 20.0;  // seconds
-    double elapsed = (current_time - spin_start_time_).seconds();
-    
-    if (elapsed < spin_duration) {
-      // Publish rotation command
-      geometry_msgs::msg::Twist cmd_vel;
-      cmd_vel.linear.x = 0.0;
-      cmd_vel.linear.y = 0.0;
-      cmd_vel.linear.z = 0.0;
-      cmd_vel.angular.x = 0.0;
-      cmd_vel.angular.y = 0.0;
-      cmd_vel.angular.z = 0.5;  // 0.5 rad/s rotation
-      cmd_vel_publisher_->publish(cmd_vel);
-      
-      RCLCPP_INFO(logger_, "Spinning... %.1f/%.1f seconds", elapsed, spin_duration);
-      return;
-    } else {
-      // Stop spinning
-      geometry_msgs::msg::Twist cmd_vel;
-      cmd_vel.linear.x = 0.0;
-      cmd_vel.linear.y = 0.0;
-      cmd_vel.linear.z = 0.0;
-      cmd_vel.angular.x = 0.0;
-      cmd_vel.angular.y = 0.0;
-      cmd_vel.angular.z = 0.0;
-      cmd_vel_publisher_->publish(cmd_vel);
-      
-      initial_spin_complete_ = true;
-      RCLCPP_INFO(logger_, "Initial 360° rotation complete! Starting exploration...");
-    }
+    return;  // spin_timer_ is handling rotation at 10Hz — nothing to do here
   }
-  
+
   // Check for clock mismatch (e.g. System vs ROS time switch)
   if (last_progress_.get_clock_type() != this->now().get_clock_type()) {
     RCLCPP_WARN(logger_, "Clock type changed, resetting last_progress_ timer.");

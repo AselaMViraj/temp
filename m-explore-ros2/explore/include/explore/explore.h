@@ -143,6 +143,7 @@ private:
   bool resuming_ = false;
   bool initial_spin_complete_ = false;
   rclcpp::Time spin_start_time_;
+  rclcpp::TimerBase::SharedPtr spin_timer_;  // Dedicated 10Hz timer for initial rotation
 };
 }  // namespace explore
 
